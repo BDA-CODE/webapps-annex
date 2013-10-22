@@ -7,90 +7,6 @@
  *
  */
 
-function queryObj(obj) {
-    this.q = obj;
-    this.isNull = this.q?false:true;
-    this.self = this;
-    this.html = function (val) {
-        this.q.innerHTML = val;
-        return this;
-    }
-
-    this.hasClass = function (c_name) {
-        if (this.isNull)
-            return false;
-        return this.q.classList.contains(c_name);
-    }
-
-    this.addClass = function (c_name) {
-        if (this.isNull)
-            return this;
-        var list = this.q.classList;
-        list.add (c_name);
-        return this;
-    }
-
-    this.removeClass = function (c_name) {
-        if (this.isNull)
-            return this;
-        var list = this.q.classList;
-        list.remove (c_name);
-        return this;
-    }
-
-    this.css = function (item, style) {
-        if (item == 'background-color')
-            item = 'backgroundColor';
-        if (this.isNull)
-            return this;
-        this.q.style[item] = style;
-        return this;
-    }
-
-    this.click = function (fun) {
-        if (this.isNull)
-            return this;
-        this.q.onclick = fun;
-        return this;
-    }
-
-    this.find = function (selector) {
-        if (this.isNull)
-            return this;
-        var obj = this.q.querySelector(selector);
-        return new queryObj(obj);
-    }
-
-    this.hover = function (onmouseover, onmouseout) {
-        if (this.isNull)
-            return this;
-        this.q.onmouseover = onmouseover;
-        this.q.onmouseout = onmouseout;
-        return this;
-    }
-
-    this.attr = function (attr, val) {
-        if (this.isNull)
-            return this;
-        this.q.setAttribute(attr, val);
-        return this;
-    }
-}
-
-function $(selector) {
-    var res;
-    if (typeof selector == "string") {
-        res = document.querySelector(selector);
-    } else {
-        res = selector;
-    }
-    return new queryObj(res);
-}
-
-$.merge = function (a, b) {
-    return a.concat(b);
-}
-
 var World = (function(){
     var w = {
         boardTexture:{board: 'images/game_014_board.png', black: 'images/game_002_blackpc.png', white: 'images/game_003_whitepc.png', leftPieces: 'images/game_004_pcleftside.png', rightPieces: 'images/game_005_pcrightside.png', hidePieces: 'images/game_015_pcside.png', p1Image: 'images/game_011_settings1p.png', p2Image: 'images/game_010_settings2p.png',},
@@ -141,46 +57,64 @@ var World = (function(){
                 $('.result_exit').html(getMessage('exit', 'Exit'));
                 //$('#license').html(getMessage('license', 'License'));
                 //$('#readme').html(getMessage('readme', 'Readme'));
-                $('.configure_panel_startover').click(function(){
-                    World.startOver();
-                }).hover(function(){
-                    $(this).css('background-color','#222222');
-                    World.playSound('snd_navmove');
-                },function(){
-                    $(this).css('background-color','#000000');
-                }).find('.configure_panel_text').html(getMessage('startover','Start over'));
+                $('.configure_panel_startover')
+                    .on("click",function(){
+                        World.startOver();
+                    })
+                    .on("mouseover",function(){
+                        $(this).css('background-color','#222222');
+                        World.playSound('snd_navmove');
+                    })
+                    .on("mouseout",function(){
+                        $(this).css('background-color','#000000');
+                    })
+                    .find('.configure_panel_text')
+                    .html(getMessage('startover','Start over'));
 
-                $('.configure_panel_newgame').hover(function(evt){
-                    $(this).css('background-color','#222222');
-                    World.playSound('snd_navmove');
-                },function(evt){
-                    $(this).css('background-color','#000000');
-                }).click(function(){
-                    var n = 1;
-                    if ($(this).hasClass('configure_panel_new2game')){
-                        n = 2;
-                    }
-                    World.playSound('snd_navclick');
-                    World.init(n);
-                });
+                $('.configure_panel_newgame')
+                    .on("mouseover",function(evt){
+                        $(this).css('background-color','#222222');
+                        World.playSound('snd_navmove');
+                    })
+                    .on("mouseout",function(evt){
+                        $(this).css('background-color','#000000');
+                    })
+                    .on("click",function(){
+                        var n = 1;
+                        if ($(this).hasClass('configure_panel_new2game')){
+                            n = 2;
+                        }
+                        World.playSound('snd_navclick');
+                        World.init(n);
+                    });
 
-                $('.configure_panel_help').click(function(){
-                    World.showHelp();
-                }).hover(function(){
-                    $(this).css('background-color','#222222');
-                    World.playSound('snd_navmove');
-                },function(){
-                    $(this).css('background-color','#000000');
-                }).find('.configure_panel_text').html(getMessage('rules','Rules'));
+                $('.configure_panel_help')
+                    .on('click',function(){
+                        World.showHelp();
+                    })
+                    .on('mouseover',function(){
+                        $(this).css('background-color','#222222');
+                        World.playSound('snd_navmove');
+                    })
+                    .on('mouseout',function(){
+                        $(this).css('background-color','#000000');
+                    })
+                    .find('.configure_panel_text')
+                    .html(getMessage('rules','Rules'));
 
-                $('.configure_panel_exit').click(function(){
-                    window.close();
-                }).hover(function(){
-                    $(this).css('background-color','#222222');
-                    World.playSound('snd_navmove');
-                },function(){
-                    $(this).css('background-color','#000000');
-                }).find('.configure_panel_text').html(getMessage('exit','Exit'));
+                $('.configure_panel_exit')
+                    .on('click',function(){
+                        window.close();
+                    })
+                    .on('mouseover',function(){
+                        $(this).css('background-color','#222222');
+                        World.playSound('snd_navmove');
+                    })
+                    .on('mouseout',function(){
+                        $(this).css('background-color','#000000');
+                    })
+                    .find('.configure_panel_text')
+                    .html(getMessage('exit','Exit'));
                 this.hasInit = true;
             }
         },
@@ -579,7 +513,7 @@ var World = (function(){
                     ni += parseInt(this.directs[n][0]);
                     nj += parseInt(this.directs[n][1]);
                     if (ni >= 0 && ni < this.bounder && nj >= 0 && nj < this.bounder && board[ni][nj] === color) {
-                        path = $.merge(path, tpath);
+                        path = path.concat(tpath);
                     }
                 }
             }
@@ -812,7 +746,6 @@ var World = (function(){
     return w;
 })();
 
-
 function getMessage(key, alter) {
     var ret = alter || '';
     if (window.chrome && window.chrome.i18n && window.chrome.i18n.getMessage) {
@@ -834,7 +767,80 @@ function getMessage(key, alter) {
         }
     }
     return ret;
-}
+};
+
+function registerEventHandlers() {
+    $("body").on("dragstart, selectstart",function() {
+        return false;
+    });
+
+    $("#open1")
+        .on("click",function() {
+            World.playSound('snd_navclick');
+            World.init(1);
+        })
+        .on("mouseover",function() {
+            $('#open_text_bg_4').removeClass('display_none');
+            World.playSound('snd_navmove');
+        })
+        .on("mouseout",function() {
+            $('#open_text_bg_4').addClass('display_none');
+        });
+
+    $("#open2")
+        .on("click",function() {
+            World.playSound('snd_navclick');
+            World.init(2);
+        })
+        .on("mouseover",function() {
+            $('#open_text_bg_3').removeClass('display_none');
+            World.playSound('snd_navmove');
+        })
+        .on("mouseout",function() {
+            $('#open_text_bg_3').addClass('display_none');
+        });
+
+    $("#open_help")
+        .on("click",function() {
+            World.showHelp();
+        })
+        .on("mouseover",function() {
+            $('#open_text_bg_2').removeClass('display_none');
+            World.playSound('snd_navmove');
+        })
+        .on("mouseout",function() {
+            $('#open_text_bg_2').addClass('display_none');
+        });
+
+    $("#open_exit")
+        .on("click",function() {
+            window.close();
+        })
+        .on("mouseover",function() {
+            $('#open_text_bg_1').removeClass('display_none');
+            World.playSound('snd_navmove');
+        })
+        .on("mouseout",function() {
+            $('#open_text_bg_1').addClass('display_none');
+        });
+
+    $("#help_exit")
+        .on("click",function() {
+            World.exitHelp();
+        })
+        .on("mouseover",function() {
+            $('img.help_exit_img').removeClass('display_none');
+            World.playSound('snd_navmove');
+        })
+        .on("mouseout",function() {
+            $('img.help_exit_img').addClass('display_none');
+        });
+
+    $('#licensebtnl')
+        .on("click",function(){
+            World.showLicense("license", "open");
+        });
+};
 
 window.onload = function(){
     var locale = getMessage('locale', 'en');
@@ -848,14 +854,13 @@ window.onload = function(){
     }
     $('title').html(getMessage('name', 'Annex'));
     $('#open1').html(getMessage('1PlayerGame', '1 Player Game'));
-    $('#open2').html(getMessage('2PlayerGame', '2 Player Game'))
+    $('#open2').html(getMessage('2PlayerGame', '2 Player Game'));
     $('#open_help').html(getMessage('howtoPlay', 'How to Play'));
     $('#open_exit').html(getMessage('exit', 'Exit'));
-    $('#licensebtnl').click(function(){
-        World.showLicense("license", "open");
-    });
+
+    registerEventHandlers();
 
     scaleBody(document.getElementsByTagName("body")[0], 720);
 
     World.playSound('snd_theme');
-}
+};
