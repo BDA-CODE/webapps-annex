@@ -49,6 +49,11 @@ module.exports = function (grunt) {
     },
 
     copy: {
+      all: {
+        files: [
+          { expand: true, cwd: '.', src: ['app/**'], dest: 'build/' }
+        ]
+      },
       common: {
         files: [
           { expand: true, cwd: '.', src: ['app/lib/**'], dest: 'build/' },
@@ -217,7 +222,17 @@ module.exports = function (grunt) {
     'copy:common'
   ]);
 
+  grunt.registerTask('dist', [
+    'clean',
+    'imagemin:dist',
+    'uglify:dist',
+    'cssmin:dist',
+    'htmlmin:dist',
+    'copy:common'
+  ]);
+
   grunt.registerTask('crx', ['dist', 'copy:crx', 'copy:crx_manifest']);
+  grunt.registerTask('crx_debug', ['copy:all', 'copy:crx', 'copy:crx_manifest']);
   grunt.registerTask('wgt', ['dist', 'copy:wgt', 'copy:wgt_config', 'package:wgt']);
   grunt.registerTask('sdk', [
     'imagemin:dist',

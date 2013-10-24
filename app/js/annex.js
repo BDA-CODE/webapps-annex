@@ -48,7 +48,61 @@ var World = (function(){
         },
         showWorld: function() {
             if (!this.hasInit) {
-                $('#view').html('<div class="play1_lable"></div><div class="play1_score" id="black_result" align="center">0</div> <div class="play1_pieces_lable"></div> <div class="play2_lable"></div> <div class="play2_score" id="white_result" align="center">0</div> <div class="play2_pieces_lable"></div> <div class="stone_selected"><img id="message" /><span id="turn"></span></div> <div class="left_pieces" id="left_pieces"></div> <div class="right_pieces" id="right_pieces"></div> <a onClick="javascript:World.configure();" class="configure"><img src="images/game_006_settingsbtn.png" /></a> <div class="configure_panel display_none"> <div class="configure_panel_func"> <div class="configure_panel_startover"> <div class="configure_panel_text"></div> </div> <div class="configure_panel_newgame"> <div class="configure_panel_text"></div> </div> <div class="configure_panel_help"> <div class="configure_panel_text"></div> </div> <div class="configure_panel_exit"> <div class="configure_panel_text"></div> </div> </div> <img class="configure_panel_arrow" src="images/game_013_settingsarrow.png" /> </div> <div id="board"></div> <div id="result" class="result result_wood display_none"> <div class="result_win_text" align="center"></div> <img class="result_new_p1_rollover display_none" src="images/winner_004_rollover.png" /> <img class="result_new_p2_rollover display_none" src="images/winner_004_rollover.png" /> <img class="result_exit_rollover display_none" src="images/winner_005_exitrollover.png" /> <a onClick="javascript:World.playSound('+"'snd_navclick');World.init(1);"+'" onMouseOver="$('+"'img.result_new_p1_rollover').removeClass('display_none');World.playSound('snd_navmove');"+'" onMouseOut="$('+"'img.result_new_p1_rollover').addClass('display_none')"+'" class="result_new_p1"></a> <a onClick="javascript:World.playSound('+"'snd_navclick');World.init(2);"+'" onMouseOver="$('+"'img.result_new_p2_rollover').removeClass('display_none');World.playSound('snd_navmove');"+'" onMouseOut="$('+"'img.result_new_p2_rollover').addClass('display_none')"+'" class="result_new_p2"></a> <a onClick="javascript:window.close();" onMouseOver="$('+"'img.result_exit_rollover').removeClass('display_none');World.playSound('snd_navmove');"+'" onMouseOut="$('+"'img.result_exit_rollover').addClass('display_none')"+'" class="result_exit"></a> <div class="result_quit" onClick="javascript:World.closeResult();"></div> </div>');
+                $('#view').html('<div class="play1_lable"></div><div class="play1_score" id="black_result" align="center">0</div><div class="play1_pieces_lable"></div><div class="play2_lable"></div><div class="play2_score" id="white_result" align="center">0</div><div class="play2_pieces_lable"></div><div class="stone_selected"><img id="message" /><span id="turn"></span></div><div class="left_pieces" id="left_pieces"></div><div class="right_pieces" id="right_pieces"></div><a id="game_settingsbtn" class="configure"><img src="images/game_006_settingsbtn.png" /></a><div class="configure_panel display_none"><div class="configure_panel_func"><div class="configure_panel_startover"><div class="configure_panel_text"></div></div><div class="configure_panel_newgame"><div class="configure_panel_text"></div></div><div class="configure_panel_help"><div class="configure_panel_text"></div></div><div class="configure_panel_exit"><div class="configure_panel_text"></div></div></div><img class="configure_panel_arrow" src="images/game_013_settingsarrow.png" /></div><div id="board"></div><div id="result" class="result result_wood display_none"><div class="result_win_text" align="center"></div><img class="result_new_p1_rollover display_none" src="images/winner_004_rollover.png" /><img class="result_new_p2_rollover display_none" src="images/winner_004_rollover.png" /><img class="result_exit_rollover display_none" src="images/winner_005_exitrollover.png" /><a id="result_new_p1" class="result_new_p1"></a><a id="result_new_p2" class="result_new_p2"></a><a id="result_exit" class="result_exit"></a><div id="result_quit" class="result_quit"></div></div>');
+
+                $('#game_settingsbtn')
+                    .off()
+                    .on('click',function(){
+                        World.configure();
+                    });
+
+                $('#result_new_p1')
+                    .off()
+                    .on('click',function() {
+                        World.playSound('snd_navclick');
+                        World.init(1);
+                    })
+                    .on('mouseover',function() {
+                        $('img.result_new_p1_rollover').removeClass('display_none');
+                        World.playSound('snd_navmove');
+                    })
+                    .on('mouseout',function() {
+                        $('img.result_new_p1_rollover').addClass('display_none');
+                    });
+
+                $('#result_new_p2')
+                    .off()
+                    .on('click',function() {
+                       World.playSound('snd_navclick');
+                       World.init(2);
+                    })
+                    .on('mouseover',function() {
+                        $('img.result_new_p2_rollover').removeClass('display_none');
+                        World.playSound('snd_navmove');
+                    })
+                    .on('mouseout',function() {
+                        $('img.result_new_p2_rollover').addClass('display_none');
+                    });
+
+                $('#result_exit')
+                    .off()
+                    .on('click',function() {
+                        window.close();
+                    })
+                    .on('mouseover',function() {
+                        $('img.result_exit_rollover').removeClass('display_none');
+                        World.playSound('snd_navmove');
+                    })
+                    .on('mouseout',function() {
+                        $('img.result_exit_rollover').addClass('display_none');
+                    });
+
+                $('#result_quit')
+                    .off()
+                    .on('click',function() {
+                        World.closeResult();
+                    });
+
                 $('.play1_pieces_lable').html(getMessage('pieces', 'pieces'));
                 $('.play2_pieces_lable').html(getMessage('pieces', 'pieces'));
                 $('#turn').html(getMessage('turn', "'s Turn"));
@@ -200,7 +254,20 @@ var World = (function(){
             this.endConfigure();
             if (!this.hasHelp) {
                 this.hasHelp = true;
-                $('#help').html('<div class="help_text"  align="center"> <div class="help_title"></div> <div class="help_contain"></div> </div> <img class="help_exit_img display_none" src="images/rules_002_rollover.png" /> <a onClick="javascript:World.exitHelp();" onMouseOver="$('+"'img.help_exit_img').removeClass('display_none');World.playSound('snd_navmove');"+'" onMouseOut="$('+"'img.help_exit_img').addClass('display_none')"+'" class="help_exit"></a>');
+                $('#help').html('<div class="help_text"  align="center"><div class="help_title"></div><div class="help_contain"></div></div><img class="help_exit_img display_none" src="images/rules_002_rollover.png" /><a id="help_exit" class="help_exit"></a>');
+
+                $('#help_exit')
+                    .on('click',function() {
+                        World.exitHelp();
+                    })
+                    .on('mouseover',function() {
+                        $('img.help_exit_img').removeClass('display_none');
+                        World.playSound('snd_navmove');
+                    })
+                    .on('mouseout',function() {
+                        $('img.help_exit_img').addClass('display_none');
+                    });
+
                 $('.help_title').html(getMessage('howtoPlay', 'How to Play'));
                 $('.help_contain').html(getMessage('help', "Play a piece on the board so that one or more of your opponent’s pieces are between two of your pieces. All of the opponent’s pieces between your own turn over and become your color.<br>The player with the most pieces on the board at the end of the game wins!"));
                 $('.help_exit').html(getMessage('goBack', 'Go Back'));
@@ -261,7 +328,7 @@ var World = (function(){
         },
         drawPoint: function(place, color){
             $('img#a'+place[0]+place[1]).attr('src', this.boardTexture[color]).removeClass('tip');
-            $('a#l'+place[0]+place[1]).attr('onMouseOver','').attr('onMouseOut','');
+            $('a#l'+place[0]+place[1]).off('mouseover').off('mouseout');
         },
         drawPath: function(path, color){
             this.isDrawing = true;
@@ -365,14 +432,26 @@ var World = (function(){
             this.isResult = false;
         },
         setTips: function(color) {
+            var addTip = function(id,stone) {
+                return function() {
+                    $('#'+id+' img').attr('src',stone).addClass('tip');
+                };
+            };
+            var removeTip = function(id,spage) {
+                return function() {
+                    $('#'+id+' img').attr('src',spare).removeClass('tip');
+                };
+            };
+
             var stone = this.boardTexture[color];
             var spare = this.boardTexture['board'];
             for (var n in this.possible) {
                 var p = this.possible[n];
                 if (this.board[p[0]][p[1]] == 'board') {
                     var id = 'l'+p[0]+p[1];
-                    $('#'+id).attr('onMouseOver',"$('#"+id+" img').attr('src','"+stone+"').addClass('tip');")
-                        .attr('onMouseOut',"$('#"+id+" img').attr('src','"+spare+"').removeClass('tip');");
+                    $('#'+id)
+                        .on('mouseover', addTip(id,stone))
+                        .on('mouseout', removeTip(id,spare));
                 }
             }
         },
@@ -382,16 +461,33 @@ var World = (function(){
                 var p = possible[n];
                 var spare = this.boardTexture[this.board[p[0]][p[1]]];
                 var id = 'l'+p[0]+p[1];
-                $('#'+id).attr('onMouseOver','').attr('onMouseOut','').find('img').attr('src', spare).removeClass('tip');
+                $('#'+id)
+                    .off('mouseover')
+                    .off('mouseout')
+                    .find('img')
+                    .attr('src', spare)
+                    .removeClass('tip');
             }
         },
         drawBoard: function(){
 
             var str = '';
             for (var i=0; i<this.bounder; i++){
+                var addClick = function(i,j) {
+                    console.log("ADDING CLICK:"+i+j);
+                    return function() {
+                        console.log("CLICK:"+i+j);
+                        $('#l'+i+j)
+                            .off()
+                            .on('click',function() {
+                                World.click(i,j);
+                            });
+                    };
+                };
                 str += '<div>';
                 for (var j=0; j<this.bounder; j++){
-                    str += '<span><a onClick="javascript:World.click('+i+','+j+');" id="l'+i+j+'" class="img_style" onMouseOver="" onMouseOut="" ><img src="'+this.boardTexture[this.board[i][j]]+'" id="a'+i+j+'" class="img_board" /></a></span>';
+                    str += '<span><a id="l'+i+j+'" class="img_style"> <img src="'+this.boardTexture[this.board[i][j]]+'" id="a'+i+j+'" class="img_board" /></a></span>';
+                    setTimeout(addClick(i,j),0);
                 }
                 str += '</div>';
             }
